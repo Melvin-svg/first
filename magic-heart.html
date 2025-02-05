@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Heart</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #0a0a0a, #3a3a3a);
+            overflow: hidden;
+            font-family: 'Pacifico', cursive;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Glowing Heart */
+        .heart {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            background: #ff2d55;
+            transform: rotate(-45deg);
+            cursor: pointer;
+            animation: pulse 1.2s ease-in-out infinite;
+            box-shadow: 0 0 50px #ff2d55;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: #ff2d55;
+            border-radius: 50%;
+            box-shadow: 0 0 50px #ff2d55;
+        }
+
+        .heart::before {
+            top: -60px;
+            left: 0;
+        }
+
+        .heart::after {
+            top: 0;
+            left: 60px;
+        }
+
+        /* Interactive Smoke */
+        .smoke {
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            pointer-events: none;
+        }
+
+        .smoke span {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            filter: blur(2px);
+            animation: smokeRise 4s linear infinite;
+        }
+
+        /* Floating Message */
+        .message {
+            position: relative;
+            margin-top: 40px;
+            font-size: 3.5em;
+            color: transparent;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Background Sparkles */
+        .sparkles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .sparkle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: sparkle 2s linear infinite;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { transform: rotate(-45deg) scale(1); }
+            50% { transform: rotate(-45deg) scale(1.1); }
+        }
+
+        @keyframes smokeRise {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, 0) scale(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -200px) scale(3);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes sparkle {
+            0% {
+                opacity: 0;
+                transform: translateY(0);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sparkles" id="sparkles"></div>
+    <div class="container">
+        <div class="heart" id="heart"></div>
+        <div class="smoke" id="smoke"></div>
+        <div class="message">Be My Forever</div>
+    </div>
+
+    <script>
+        // Create interactive smoke particles
+        const heart = document.getElementById('heart');
+        const smoke = document.getElementById('smoke');
+        
+        heart.addEventListener('mousemove', (e) => {
+            for(let i = 0; i < 3; i++) {
+                const particle = document.createElement('span');
+                particle.style.left = e.clientX - heart.offsetLeft + 'px';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                smoke.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 4000);
+            }
+        });
+
+        // Create background sparkles
+        const sparklesContainer = document.getElementById('sparkles');
+        
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + 'vw';
+            sparkle.style.width = sparkle.style.height = 
+                Math.random() * 5 + 2 + 'px';
+            sparkle.style.animationDuration = Math.random() * 3 + 2 + 's';
+            sparklesContainer.appendChild(sparkle);
+            
+            setTimeout(() => sparkle.remove(), 2000);
+        }
+
+        setInterval(createSparkle, 100);
+    </script>
+</body>
+</html>
